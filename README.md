@@ -1,0 +1,1 @@
+Solution to the battleship problem posed as the first assignment to the 2019/1 Planejamento e Análise de Algoritmos class @UFMG.
