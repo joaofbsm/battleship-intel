@@ -7,11 +7,11 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char *argv[]) {
     ifstream f;
     string line;
     int n_combat_posts, n_possible_teleports;
-    f.open("tests/in/pdf1.in");
+    f.open(argv[1]);
 
     getline(f, line);
     istringstream iss(line);
