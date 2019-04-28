@@ -2,7 +2,6 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <tuple>
 #include <vector>
 #include "graph.h"
 
@@ -65,7 +64,9 @@ int main(int argc, char *argv[]) {
 
     cout << "===========\n";
 
-    g.connected_components();
+    g.find_connected_components();
+
+    g.print_connected_components();
 
     return 0;
 }

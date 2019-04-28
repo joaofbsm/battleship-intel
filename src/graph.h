@@ -19,16 +19,19 @@ class Graph {
     // One dimensional array indexed by vertex number which contains its state
     int *vertices_state;
 
-    // Depth First Search functions
-    void DFS_visit(int u, vector<bool> &visited); 
-    void DFS();
+    // Groups of vertices that are connected subgraphs
+    vector< vector<int> > connected_components;
+
+    // Depth First Search recursive function
+    void DFS_visit(int u, vector<bool> &visited, vector<int> &connected_vertices);
 public: 
     Graph(int V);   // Constructor 
     void add_vertex_state(int actual_post, int correct_post);
     void add_edge(int v, int w); 
-    void connected_components(); 
+    void find_connected_components(); 
     void print_adj_list();
     void print_vertices_state();
+    void print_connected_components();
     bool is_bipartite(int src);
 }; 
 

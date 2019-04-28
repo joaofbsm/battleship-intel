@@ -13,46 +13,33 @@ Graph::Graph(int V) {
 } 
 
 
-// Method to print connected components in an undirected graph 
-void Graph::connected_components() { 
+// DFS to find connected components in an undirected graph 
+void Graph::find_connected_components() { 
     // Mark all the vertices as not visited 
-    vector<bool> visited(V, false);
+    vector<bool> visited (V + 1, false);
 
-    for(int v = 0; v < V; v++) 
-        visited[v] = false;
-  
-    for (int v=0; v<V; v++) { 
+    for (int v = 1; v < V + 1; v++) { 
         if (visited[v] == false) { 
+            vector<int> connected_vertices;
+
             // print all reachable vertices from v 
-            DFS_visit(v, visited); 
-  
-            cout << "\n"; 
-        } 
-    }
-} 
+            DFS_visit(v, visited, connected_vertices);
 
-
-void Graph::DFS_visit(int u, vector<bool> &visited) { 
-    // Mark the current node as visited and print it 
-    visited[u] = true; 
-    cout << u << " "; 
-  
-    // Recur for all the vertices adjacent to this vertex 
-    for (int i = 0; i < adj[u].size(); i++) {
-        if (visited[adj[u][i]] == false) {
-            DFS_visit(adj[u][i], visited); 
+            connected_components.push_back(connected_vertices);
         }
     }
 } 
 
 
-// This function does DFS_visit() for all unvisited vertices
-void Graph::DFS() 
-{ 
-    vector<bool> visited(V, false); 
-    for (int u = 0; u < V; u++) {
-        if (visited[u] == false) {
-            DFS_visit(u, visited); 
+void Graph::DFS_visit(int u, vector<bool> &visited, vector<int> &connected_vertices) { 
+    // Mark the current node as visited and print it 
+    visited[u] = true;
+    connected_vertices.push_back(u);
+  
+    // Recur for all the vertices adjacent to this vertex 
+    for (int i = 0; i < adj[u].size(); i++) {
+        if (visited[adj[u][i]] == false) {
+            DFS_visit(adj[u][i], visited, connected_vertices); 
         }
     }
 } 
@@ -72,9 +59,9 @@ void Graph::add_vertex_state(int actual_post, int correct_post) {
 
 // Prints the adjacency list
 void Graph::print_adj_list() {
-    for (int i=1; i < V + 1; i++) {
+    for (int i = 1; i < V + 1; i++) {
         cout << i << ": ";
-        for (int j:adj[i]) {
+        for (int j: adj[i]) {
             cout << j << " ";
         }
         cout << "\n";    
@@ -84,12 +71,23 @@ void Graph::print_adj_list() {
 
 // Prints the array of vertices states
 void Graph::print_vertices_state() {
-    for (int i=1; i < V + 1; i++) {
+    for (int i = 1; i < V + 1; i++) {
         cout << i << ": " << vertices_state[i] << "\n";
     }
 }
 
 
+void Graph::print_connected_components() {
+    for (auto const& c: connected_components) {
+        for(auto const& v: c) {
+            cout << v << " ";
+        }
+        cout << "\n";
+    }
+}
+
+
+// Tries to paint the graph with only two colors to check if it is bipartite
 bool Graph::is_bipartite(int src) {
     // Start all vertices with no color (-1)
     vector<int> vertices_color (V + 1, -1);
