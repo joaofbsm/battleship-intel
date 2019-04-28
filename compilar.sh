@@ -1,2 +1,2 @@
 #!/bin/bash
-# Código para compilar
+g++ code/main.cpp -o main

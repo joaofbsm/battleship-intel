@@ -1,6 +1,18 @@
 #include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    ifstream f;
+    string line;
+
+    f.open("tests/in/pdf1.in");
+    while (getline(f, line)) {
+      cout << line << "\n";
+    }
+    f.close();
+
     return 0;
 }
