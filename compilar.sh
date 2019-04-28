@@ -1,2 +1,2 @@
 #!/bin/bash
-g++ code/main.cpp -o main
+g++ -o main code/main.cpp code/graph.cpp

@@ -35,3 +35,6 @@
 .idea/
 CMakeLists.txt
 cmake-build-debug/
+
+# Compiled main object
+main
