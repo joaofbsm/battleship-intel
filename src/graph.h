@@ -14,10 +14,10 @@ class Graph {
     int E;    // No. of edges
   
     // Pointer to an array containing adjacency lists 
-    list<int> *adj; 
+    vector<int> *adj; 
   
-    // Bidimensional vector containing pairs of states
-    vector< vector<int> > vertices_state;
+    // One dimensional array indexed by vertex number which contains its state
+    int *vertices_state;
 
     // DFS recursive function
     void DFS_visit(int v, bool visited[]); 
@@ -26,6 +26,7 @@ public:
     void add_vertex_state(int actual_post, int correct_post);
     void add_edge(int v, int w); 
     void connected_components(); 
+    void print_adj_list();
 }; 
 
 #endif

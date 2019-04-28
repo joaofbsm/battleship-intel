@@ -57,5 +57,7 @@ Graph create_graph_from_file(char *path_to_file) {
 int main(int argc, char *argv[]) {
     Graph g = create_graph_from_file(argv[1]);
 
+    g.print_adj_list();
+
     return 0;
 }
