@@ -59,5 +59,13 @@ int main(int argc, char *argv[]) {
 
     g.print_adj_list();
 
+    cout << "===========\n";
+
+    g.print_vertices_state();
+
+    cout << "===========\n";
+
+    g.connected_components();
+
     return 0;
 }

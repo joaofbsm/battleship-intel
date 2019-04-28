@@ -28,6 +28,8 @@ public:
     void add_edge(int v, int w); 
     void connected_components(); 
     void print_adj_list();
+    void print_vertices_state();
+    bool is_bipartite(int src);
 }; 
 
 #endif
