@@ -19,8 +19,9 @@ class Graph {
     // One dimensional array indexed by vertex number which contains its state
     int *vertices_state;
 
-    // DFS recursive function
-    void DFS_visit(int v, bool visited[]); 
+    // Depth First Search functions
+    void DFS_visit(int u, vector<bool> &visited); 
+    void DFS();
 public: 
     Graph(int V);   // Constructor 
     void add_vertex_state(int actual_post, int correct_post);

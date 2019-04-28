@@ -15,7 +15,7 @@ Graph::Graph(int V) {
 // Method to print connected components in an undirected graph 
 void Graph::connected_components() { 
     // Mark all the vertices as not visited 
-    bool *visited = new bool[V]; 
+    vector<bool> visited(V, false);
     for(int v = 0; v < V; v++) 
         visited[v] = false; 
   
@@ -23,29 +23,36 @@ void Graph::connected_components() {
     { 
         if (visited[v] == false) 
         { 
-            // print all reachable vertices 
-            // from v 
+            // print all reachable vertices from v 
             DFS_visit(v, visited); 
   
             cout << "\n"; 
         } 
-    } 
+    }
 } 
 
 
-void Graph::DFS_visit(int v, bool visited[]) { 
+void Graph::DFS_visit(int u, vector<bool> &visited) { 
     // Mark the current node as visited and print it 
-    visited[v] = true; 
-    cout << v << " "; 
+    visited[u] = true; 
+    cout << u << " "; 
   
-    // Recur for all the vertices 
-    // adjacent to this vertex 
-    vector<int>::iterator i; 
-    for(i = adj[v].begin(); i != adj[v].end(); ++i) 
-        if(!visited[*i]) 
-            DFS_visit(*i, visited); 
+    // Recur for all the vertices adjacent to this vertex 
+    for (int i=0; i<adj[u].size(); i++) 
+            if (visited[adj[u][i]] == false) 
+                DFS_visit(adj[u][i], visited); 
 } 
- 
+
+
+// This function does DFS_visit() for all unvisited vertices
+void Graph::DFS() 
+{ 
+    vector<bool> visited(V, false); 
+    for (int u=0; u<V; u++) 
+        if (visited[u] == false) 
+            DFS_visit(u, visited); 
+} 
+
 
 // Method to add an undirected edge 
 void Graph::add_edge(int v, int w) { 
