@@ -1,6 +1,6 @@
 # C++ compiler and flags to use
 CXX = g++
-CXXFLAGS = 
+CXXFLAGS = -std=c++11
 
 main: main.o graph.o
 	$(CXX) $(CXXFLAGS) -o main main.o graph.o

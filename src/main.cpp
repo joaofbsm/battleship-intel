@@ -4,36 +4,58 @@
 #include <string>
 #include <tuple>
 #include <vector>
+#include "graph.h"
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
+
+Graph create_graph_from_file(char *path_to_file) {
     ifstream f;
+    f.open(path_to_file);
+
+    // These are equivalent to the number of vertices and edges in the graph, respectively
+    int num_combat_posts, num_possible_teleports;
+
     string line;
-    int n_combat_posts, n_possible_teleports;
-    f.open(argv[1]);
 
     getline(f, line);
     istringstream iss(line);
-    iss >> n_combat_posts >> n_possible_teleports;
+    iss >> num_combat_posts >> num_possible_teleports;
 
-    vector< vector<int> > possible_teleports(n_possible_teleports, vector<int>(2));
-    vector< vector<int> > combat_posts_state(n_combat_posts, vector<int>(2));
+    int m=0;
+    Graph g = Graph(num_combat_posts);
+    
+    while (m < num_possible_teleports and getline(f, line)) {
+        int a, b;
+        istringstream iss(line);
+        if (!(iss >> a >> b)) { 
+            cout << "Error parsing input file.";
+        }
+        
+        g.add_edge(a, b);
 
-    int m=0, n=0;
-
-    while (getline(f, line) and m < n_possible_teleports) {
-      int a, b;
-      istringstream iss(line);
-      if (!(iss >> a >> b)) { 
-        cout << "Error parsing input file.";
-      }
-      possible_teleports[m][0] = a;
-      possible_teleports[m][1] = b;
-      cout << possible_teleports[m][0] << " " << possible_teleports[m][1] << "\n";
-      m++;
+        m++;
     }
+
+    // Loops num_combat_posts times
+    while (getline(f, line)) {
+        int c, d;
+        istringstream iss(line);
+        if (!(iss >> c >> d)) {
+            cout << "Error parsing input file.";
+        }
+
+        g.add_vertex_state(c, d);
+    }
+
     f.close();
+
+    return g;
+}
+
+
+int main(int argc, char *argv[]) {
+    Graph g = create_graph_from_file(argv[1]);
 
     return 0;
 }
