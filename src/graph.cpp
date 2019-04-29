@@ -13,38 +13,6 @@ Graph::Graph(int V) {
 } 
 
 
-// DFS to find connected components in an undirected graph 
-void Graph::find_connected_components() { 
-    // Mark all the vertices as not visited 
-    vector<bool> visited (V + 1, false);
-
-    for (int v = 1; v < V + 1; v++) { 
-        if (visited[v] == false) { 
-            vector<int> connected_vertices;
-
-            // print all reachable vertices from v 
-            DFS_visit(v, visited, connected_vertices);
-
-            connected_components.push_back(connected_vertices);
-        }
-    }
-} 
-
-
-void Graph::DFS_visit(int u, vector<bool> &visited, vector<int> &connected_vertices) { 
-    // Mark the current node as visited and print it 
-    visited[u] = true;
-    connected_vertices.push_back(u);
-  
-    // Recur for all the vertices adjacent to this vertex 
-    for (int i = 0; i < adj[u].size(); i++) {
-        if (visited[adj[u][i]] == false) {
-            DFS_visit(adj[u][i], visited, connected_vertices); 
-        }
-    }
-} 
-
-
 // Method to add an undirected edge 
 void Graph::add_edge(int v, int w) { 
     adj[v].push_back(w); 
@@ -55,6 +23,38 @@ void Graph::add_edge(int v, int w) {
 void Graph::add_vertex_state(int actual_post, int correct_post) {
     vertices_state[actual_post] = correct_post;
 }
+
+
+// DFS to find connected components in an undirected graph 
+void Graph::find_connected_components() { 
+    // Mark all the vertices as not visited 
+    vector<bool> visited (V + 1, false);
+
+    for (int v = 1; v < V + 1; v++) { 
+        if (visited[v] == false) { 
+            vector<int> connected_vertices;
+
+            // print all reachable vertices from v 
+            connected_components_util(v, visited, connected_vertices);
+
+            connected_components.push_back(connected_vertices);
+        }
+    }
+} 
+
+
+void Graph::connected_components_util(int u, vector<bool> &visited, vector<int> &connected_vertices) { 
+    // Mark the current node as visited and add it to the component
+    visited[u] = true;
+    connected_vertices.push_back(u);
+  
+    // Recur for all the vertices adjacent to this vertex 
+    for (int i = 0; i < adj[u].size(); i++) {
+        if (visited[adj[u][i]] == false) {
+            connected_components_util(adj[u][i], visited, connected_vertices); 
+        }
+    }
+} 
 
 
 // Prints the adjacency list
@@ -85,6 +85,43 @@ void Graph::print_connected_components() {
         cout << "\n";
     }
 }
+
+
+bool Graph::is_cyclic_util(int u, int parent, vector<bool> &visited) {
+    // Mark the current node as visited
+    visited[u] = true;
+  
+    // Recur for all the vertices adjacent to this vertex 
+    for (int i = 0; i < adj[u].size(); i++) {
+        if (visited[adj[u][i]] == false) {
+            if (is_cyclic_util(adj[u][i], u, visited)) {
+                return true;
+            }
+
+            else if (adj[u][i] != parent) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+
+bool Graph::is_cyclic(int src) {
+    // Mark all the vertices as not visited 
+    vector<bool> visited (V + 1, false);
+
+    for (int v = 1; v < V + 1; v++) { 
+        if (visited[v] == false) { 
+            if(is_cyclic_util(v, -1, visited)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+} 
 
 
 // Tries to paint the graph with only two colors to check if it is bipartite
@@ -120,4 +157,65 @@ bool Graph::is_bipartite(int src) {
     }
 
     return true;
+}
+
+
+int Graph::count_num_edges(vector<int> graph) {
+    int E = 0;
+    for (auto const& v: graph) {
+        for (auto const& u: adj[v]) {
+            if (u > v) {
+                E++;
+            }
+        }
+    }
+
+    return E;
+}
+
+
+int Graph::identify_battleship_type(vector<int> subgraph) {
+    // Map of ship type and return of this function:
+    // Reconhecimento : 0
+    // Frigata : 1
+    // Bombardeiro : 2
+    // Transportador : 3
+
+    // If there is a cycle can be a Bombardeiro or a Transportador battleship
+    if (is_cyclic(subgraph.front())) {
+        // Is Transportador
+        if (subgraph.size() == count_num_edges(subgraph)) {
+            return 3;
+        }
+        // Is Bombardeiro
+        else {
+            return 2;
+        }
+    }
+    // If there is no cycle it can be a Frigata or a Reconhecimento battleship
+    else {
+        // Is Reconhecimento
+        if (is_bipartite(subgraph.front())) {
+            return 0;
+        }
+        // Is Frigata
+        else {
+            return 1;
+        }
+    }
+}
+
+
+void Graph::identify_enemy_fleet() {
+    for (auto subgraph : connected_components) {
+        enemy_fleet_numbers[identify_battleship_type(subgraph)]++;
+    }
+}
+
+
+void Graph::print_enemy_fleet_numbers() {
+    for (auto i : enemy_fleet_numbers) {
+        cout << i << " ";
+    }
+    cout << "\n";
 }

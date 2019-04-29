@@ -22,8 +22,10 @@ class Graph {
     // Groups of vertices that are connected subgraphs
     vector< vector<int> > connected_components;
 
+    int enemy_fleet_numbers[4] = {0};
+
     // Depth First Search recursive function
-    void DFS_visit(int u, vector<bool> &visited, vector<int> &connected_vertices);
+    void connected_components_util(int u, vector<bool> &visited, vector<int> &connected_vertices);
 public: 
     Graph(int V);   // Constructor 
     void add_vertex_state(int actual_post, int correct_post);
@@ -32,7 +34,13 @@ public:
     void print_adj_list();
     void print_vertices_state();
     void print_connected_components();
+    bool is_cyclic_util(int u, int parent, vector<bool> &visited);
+    bool is_cyclic(int src);
     bool is_bipartite(int src);
+    int count_num_edges(vector<int> graph);
+    int identify_battleship_type(vector<int> subgraph);
+    void identify_enemy_fleet();
+    void print_enemy_fleet_numbers();
 }; 
 
 #endif

@@ -7,7 +7,7 @@
 
 using namespace std;
 
-
+// TODO: Move this to utils.cpp
 Graph create_graph_from_file(char *path_to_file) {
     ifstream f;
     f.open(path_to_file);
@@ -65,8 +65,12 @@ int main(int argc, char *argv[]) {
     cout << "===========\n";
 
     g.find_connected_components();
-
     g.print_connected_components();
+
+    cout << "===========\n";
+
+    g.identify_enemy_fleet();
+    g.print_enemy_fleet_numbers();
 
     return 0;
 }
