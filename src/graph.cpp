@@ -90,6 +90,8 @@ void Graph::print_connected_components() {
 bool Graph::is_cyclic_util(int u, int parent, vector<bool> &visited) {
     // Mark the current node as visited
     visited[u] = true;
+
+    // cout << "Current vertex: " << u << " Parent: " << parent << "\n"; 
   
     // Recur for all the vertices adjacent to this vertex 
     for (int i = 0; i < adj[u].size(); i++) {
@@ -97,10 +99,10 @@ bool Graph::is_cyclic_util(int u, int parent, vector<bool> &visited) {
             if (is_cyclic_util(adj[u][i], u, visited)) {
                 return true;
             }
-
-            else if (adj[u][i] != parent) {
-                return true;
-            }
+        }
+        else if (adj[u][i] != parent) {
+            // cout << "Is cycle! Current: " << adj[u][i] << " Parent: " << parent << "\n";
+            return true;
         }
     }
 
@@ -111,13 +113,9 @@ bool Graph::is_cyclic_util(int u, int parent, vector<bool> &visited) {
 bool Graph::is_cyclic(int src) {
     // Mark all the vertices as not visited 
     vector<bool> visited (V + 1, false);
-
-    for (int v = 1; v < V + 1; v++) { 
-        if (visited[v] == false) { 
-            if(is_cyclic_util(v, -1, visited)) {
-                return true;
-            }
-        }
+    
+    if(is_cyclic_util(src, -1, visited)) {
+        return true;
     }
 
     return false;
@@ -185,10 +183,12 @@ int Graph::identify_battleship_type(vector<int> subgraph) {
     if (is_cyclic(subgraph.front())) {
         // Is Transportador
         if (subgraph.size() == count_num_edges(subgraph)) {
+            cout << "Transportador: " << subgraph.front() << "\n";
             return 3;
         }
         // Is Bombardeiro
         else {
+            cout << "Bombardeiro: " << subgraph.front() << "\n";
             return 2;
         }
     }
@@ -196,10 +196,12 @@ int Graph::identify_battleship_type(vector<int> subgraph) {
     else {
         // Is Reconhecimento
         if (is_bipartite(subgraph.front())) {
+            cout << "Reconhecimento: " << subgraph.front() << "\n";
             return 0;
         }
         // Is Frigata
         else {
+            cout << "Frigata: " << subgraph.front() << "\n";
             return 1;
         }
     }
