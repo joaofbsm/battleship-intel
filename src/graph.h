@@ -38,6 +38,7 @@ public:
     bool is_cyclic(int src);
     bool is_bipartite(int src);
     int count_num_edges(vector<int> graph);
+    vector<int> get_vertex_degrees(vector<int> graph);
     int identify_battleship_type(vector<int> subgraph);
     void identify_enemy_fleet();
     void print_enemy_fleet_numbers();

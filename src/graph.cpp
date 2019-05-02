@@ -172,6 +172,16 @@ int Graph::count_num_edges(vector<int> graph) {
 }
 
 
+vector<int> Graph::get_vertex_degrees(vector<int> graph) {
+    vector<int> degrees;
+
+    for (int v : graph) {
+        degrees.push_back(adj[v].size());
+    }
+
+    return degrees;
+}
+
 int Graph::identify_battleship_type(vector<int> subgraph) {
     // Map of ship type and return of this function:
     // Reconhecimento : 0
@@ -194,8 +204,11 @@ int Graph::identify_battleship_type(vector<int> subgraph) {
     }
     // If there is no cycle it can be a Frigata or a Reconhecimento battleship
     else {
+        vector<int> degrees = get_vertex_degrees(subgraph);
+
         // Is Reconhecimento
-        if (is_bipartite(subgraph.front())) {
+        if (count_if(degrees.begin(), degrees.end(), [](int x) { return (x == 2); }) == subgraph.size() - 2
+            and count_if(degrees.begin(), degrees.end(), [](int x) { return (x == 1); }) == 2) {
             cout << "Reconhecimento: " << subgraph.front() << "\n";
             return 0;
         }

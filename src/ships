@@ -1,4 +1,4 @@
-Reconhecimento: sem ciclo, bipartida, grau máximo vértices = 2 (2 vértices com grau 1), V - 1 = E
-Frigatas: sem ciclo, V - 1 = E
+Reconhecimento: sem ciclo, bipartida, grau máximo vértices = 2 (2 vértices com grau 1 e V - 2 com grau 2), V - 1 = E
+Frigatas: sem ciclo, bipartida, V - 1 = E
 Bombardeiros: com ciclo, bipartida, m vértices com grau n e n vértices com grau m, m * n = E
 Transportadores: com ciclo, bipartida, todas os vértices tem grau 2, V = E

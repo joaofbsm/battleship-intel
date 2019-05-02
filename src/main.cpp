@@ -56,16 +56,16 @@ Graph create_graph_from_file(char *path_to_file) {
 int main(int argc, char *argv[]) {
     Graph g = create_graph_from_file(argv[1]);
 
-    g.print_adj_list();
+    // g.print_adj_list();
 
     cout << "===========\n";
 
-    g.print_vertices_state();
+    // g.print_vertices_state();
 
     cout << "===========\n";
 
     g.find_connected_components();
-    g.print_connected_components();
+    // g.print_connected_components();
 
     cout << "===========\n";
 
