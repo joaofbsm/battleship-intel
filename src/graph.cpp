@@ -234,3 +234,8 @@ void Graph::print_enemy_fleet_numbers() {
     }
     cout << "\n";
 }
+
+
+void Graph::calculate_fleet_advantage_time() {
+    return 0
+}

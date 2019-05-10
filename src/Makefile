@@ -1,6 +1,6 @@
 # C++ compiler and flags to use
 CXX = g++
-CXXFLAGS = -std=c++11
+CXXFLAGS = -std=c++11 -O3 -mtune=native 
 
 main: main.o graph.o
 	$(CXX) $(CXXFLAGS) -o main main.o graph.o

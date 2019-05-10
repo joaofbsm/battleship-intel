@@ -22,6 +22,13 @@ class Graph {
     // Groups of vertices that are connected subgraphs
     vector< vector<int> > connected_components;
 
+    // Type of each ship in the fleet respective to connected_components
+    vector<int> fleet_ships
+
+    // Advantage time for each ship in the fleet respective to fleet_ships
+    vector<int> advantage_time
+
+    // Quantity of each type of ship in the enemy fleet
     int enemy_fleet_numbers[4] = {0};
 
     // Depth First Search recursive function
@@ -42,6 +49,7 @@ public:
     int identify_battleship_type(vector<int> subgraph);
     void identify_enemy_fleet();
     void print_enemy_fleet_numbers();
+    void calculate_fleet_advantage_time();
 }; 
 
 #endif
