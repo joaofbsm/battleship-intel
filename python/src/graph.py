@@ -115,7 +115,7 @@ class Graph:
             parent_set_number = bipartite_sets[u]
             for v in self.adj[u]:
                 # Vertex is not in any set yet
-                if not bipartite_sets[v]:
+                if bipartite_sets[v] is None:
                     bipartite_sets[v] = (parent_set_number + 1) % 2
                     q.append(v)
 

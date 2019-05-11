@@ -34,5 +34,5 @@ def create_graph_from_file(input_file):
     return g
 
 
-
-
+def sort_ships_by_size(ships, reverse=False):
+    return sorted(ships, key=lambda s: len(s.vertices_ids), reverse=reverse)

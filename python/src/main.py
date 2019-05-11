@@ -27,7 +27,12 @@ def main(args):
     print(*ship_types, sep=' ')
 
     min_fleet_advantage = math.inf
+
+    # Sort ships in crescent order of quantity of vertices for faster computing
+    ships = utils.sort_ships_by_size(ships)
+
     for s in ships:
+        print(f'Calculando tempo de {s.ship_type}')
         min_fleet_advantage = s.compute_advantage_time_lower_bound(fleet, min_fleet_advantage)
     print(min_fleet_advantage)
 
