@@ -15,7 +15,7 @@ def compare_outputs(out_file):
     else:
         print('\t- Error.')
     if lines[1] == lines_ground_truth[1]:
-        print('\t- Distance ok!')
+        print('\t- Advantage time correct!')
     else:
         print('\t- Error. Computed {} | Expected {}'.format(lines[1], lines_ground_truth[1]))
 
