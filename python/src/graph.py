@@ -50,30 +50,6 @@ class Graph:
         return connected_components
 
 
-    def cycle_util(self, u, parent, visited):
-        # Mark the current node as visited
-        visited[u] = True
-
-        # Recur for all the vertices adjacent to this vertex
-        for i in range(len(self.adj[u])):
-            if not visited[self.adj[u][i]]:
-                if self.cycle_util(self.adj[u][i], u, visited):
-                    return True
-            elif self.adj[u][i] != parent:
-                return True
-
-        return False
-
-
-    def is_component_cyclic(self, src):
-        visited = [False] * len(self.adj)
-
-        if self.cycle_util(src, None, visited):
-            return True
-
-        return False
-
-
     def count_component_edges(self, vertices_ids):
         e = 0
 
@@ -109,7 +85,7 @@ class Graph:
         dist[src] = 0
         q.append(src)
 
-        while len(q) > 0:
+        while q:
             # Pops first element (FIFO)
             u = q.pop(0)
             for v in self.adj[u]:
@@ -121,4 +97,25 @@ class Graph:
                     if v == dest:
                         return dist[v]
 
+        # If there is no shortest path between src and dest, i.e., they are not in the same component, return None
         return None
+
+
+    def get_bipartite_sets(self, src):
+        bipartite_sets = [None] * len(self.vertices)
+        q = []
+
+        bipartite_sets[src] = 0
+        q.append(src)
+
+        while q:
+            # Pops first element (FIFO)
+            u = q.pop(0)
+            parent_set_number = bipartite_sets[u]
+            for v in self.adj[u]:
+                # Vertex is not in any set yet
+                if not bipartite_sets[v]:
+                    bipartite_sets[v] = (parent_set_number + 1) % 2
+                    q.append(v)
+
+        return bipartite_sets
