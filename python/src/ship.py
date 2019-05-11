@@ -11,7 +11,7 @@ class Ship():
     def identify_ship(self, g: Graph):
         num_edges = g.count_component_edges(self.vertices_ids)
         # If so, the graph contains no cycles
-        if len(self.vertices_ids) - 1  == num_edges:
+        if len(self.vertices_ids) - 1 == num_edges:
             if g.get_component_max_vertex_degree(self.vertices_ids) == 2:
                 self.ship_type = 0  # Reconhecimento
             else:
@@ -45,7 +45,7 @@ class Ship():
 
                 if advantage_time >= adjusted_min_fleet_advantage:
                     return min_fleet_advantage
-                    
+
         else:
             for v in self.vertices_ids:
                 dist = g.shortest_distance_between_vertices(v, g.vertices[v].weight)

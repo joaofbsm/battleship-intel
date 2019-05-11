@@ -1,5 +1,6 @@
 
 import math
+from collections import deque
 
 from vertex import Vertex
 
@@ -79,7 +80,7 @@ class Graph:
         visited = [False] * len(self.vertices)
         dist = [math.inf] * len(self.vertices)
         parent = [None] * len(self.vertices)
-        q = []
+        q = deque()
 
         visited[src] = True
         dist[src] = 0
@@ -87,7 +88,7 @@ class Graph:
 
         while q:
             # Pops first element (FIFO)
-            u = q.pop(0)
+            u = q.popleft()
             for v in self.adj[u]:
                 if not visited[v]:
                     dist[v] = dist[u] + 1
@@ -103,14 +104,14 @@ class Graph:
 
     def get_bipartite_sets(self, src):
         bipartite_sets = [None] * len(self.vertices)
-        q = []
+        q = deque()
 
         bipartite_sets[src] = 0
         q.append(src)
 
         while q:
             # Pops first element (FIFO)
-            u = q.pop(0)
+            u = q.popleft()
             parent_set_number = bipartite_sets[u]
             for v in self.adj[u]:
                 # Vertex is not in any set yet
