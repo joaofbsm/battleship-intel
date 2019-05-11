@@ -1,22 +1,27 @@
 
+from vertex import Vertex
+
+
 class Graph:
     def __init__(self, num_vertices):
+        # Set of vertices
+        self.vertices = [Vertex() for _ in range(num_vertices)]
+
         # Create adjacency list
         self.adj = [[] for _ in range(num_vertices)]
 
-        # Set of weights for vertices in the graph
-        self.vertices_weights = [0 for _ in range(num_vertices)]
-
-        self.is_cycle = None
-        self.max_vertex_degree = None
-        self.min_vertex_degree = None
 
     def add_edge(self, u, v):
         self.adj[u].append(v)
         self.adj[v].append(u)
 
+        self.vertices[u].degree += 1
+        self.vertices[v].degree += 1
+
+
     def update_vertex_weight(self, u, w):
-        self.vertices_weights[u] = w
+        self.vertices[u].weight = w
+
 
     def connected_components_util(self, u, visited, component_vertices):
         visited[u] = True
@@ -26,8 +31,9 @@ class Graph:
             if not visited[v]:
                 self.connected_components_util(v, visited, component_vertices)
 
+
     def find_connected_components(self):
-        visited = [False for _ in range(len(self.adj))]
+        visited = [False] * len(self.adj)
 
         connected_components = []
 
@@ -41,24 +47,46 @@ class Graph:
 
         return connected_components
 
-    def is_cyclic_util(self, u, parent, visited):
+
+    def cycle_util(self, u, parent, visited):
         # Mark the current node as visited
-        visited[u] = True;
+        visited[u] = True
 
         # Recur for all the vertices adjacent to this vertex
         for i in range(len(self.adj[u])):
             if not visited[self.adj[u][i]]:
-                if self.is_cyclic_util(self.adj[u][i], u, visited):
+                if self.cycle_util(self.adj[u][i], u, visited):
                     return True
             elif self.adj[u][i] != parent:
                 return True
 
-        return True
+        return False
 
-    def is_cyclic(self, src):
-        visited = [False for _ in range(len(self.adj))]
 
-        if self.is_cyclic_util(src, None, visited):
+    def is_component_cyclic(self, src):
+        visited = [False] * len(self.adj)
+
+        if self.cycle_util(src, None, visited):
             return True
 
         return False
+
+
+    def count_component_edges(self, vertices_ids):
+        e = 0
+
+        for v in vertices_ids:
+            e += len(self.adj[v])
+
+        # Dividing by 2 remove redundant edge counts as the graph is undirected
+        return e / 2
+
+
+    def get_component_max_vertex_degree(self, vertices_ids):
+        max_degree = 0
+
+        for v in vertices_ids:
+            v_degree = self.vertices[v].degree
+            max_degree = v_degree if v_degree > max_degree else max_degree
+
+        return max_degree

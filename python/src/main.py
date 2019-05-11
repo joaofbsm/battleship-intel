@@ -13,13 +13,15 @@ def main(args):
     os.makedirs(output_dir, exist_ok=True)
 
     fleet = utils.create_graph_from_file(args.input_file_path)
-    print(fleet.adj)
 
     ships = [Ship(component) for component in fleet.find_connected_components()]
 
+    ship_types = [0] * 4
     for s in ships:
-        print(s.vertices_ids)
-        s.identify_ship()
+        s.identify_ship(fleet)
+        ship_types[s.ship_type] += 1
+
+    print(*ship_types, sep=' ')
 
 
 if __name__ == '__main__':
