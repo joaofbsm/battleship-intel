@@ -4,6 +4,7 @@ import argparse
 import os
 
 import utils
+from ship import Ship
 
 
 def main(args):
@@ -12,8 +13,13 @@ def main(args):
     os.makedirs(output_dir, exist_ok=True)
 
     fleet = utils.create_graph_from_file(args.input_file_path)
-
     print(fleet.adj)
+
+    ships = [Ship(component) for component in fleet.find_connected_components()]
+
+    for s in ships:
+        print(s.vertices_ids)
+        s.identify_ship()
 
 
 if __name__ == '__main__':

@@ -4,6 +4,7 @@ import sys
 
 from graph import Graph
 
+
 def create_graph_from_file(input_file):
 
     with open(input_file) as f:
@@ -31,6 +32,7 @@ def create_graph_from_file(input_file):
             print('Exception occurred while parsing combat posts\n({})'.format(e), file=sys.stderr)
 
     return G
+
 
 
 
