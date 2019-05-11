@@ -13,7 +13,7 @@ def main(args):
 
     fleet = utils.create_graph_from_file(args.input_file_path)
 
-
+    print(fleet.adj)
 
 
 if __name__ == '__main__':

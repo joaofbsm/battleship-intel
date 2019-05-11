@@ -10,10 +10,9 @@ class Graph:
         # Set of vertices
         self.V = [Vertex() for _ in range(num_vertices)]
 
-
     def add_edge(self, u, v):
         self.adj[u].append(v)
-
+        self.adj[v].append(u)
 
     def update_vertex_weight(self, u, w):
         self.V[u].weight = w
