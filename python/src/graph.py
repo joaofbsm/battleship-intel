@@ -1,4 +1,6 @@
 
+import math
+
 from vertex import Vertex
 
 
@@ -87,6 +89,36 @@ class Graph:
 
         for v in vertices_ids:
             v_degree = self.vertices[v].degree
-            max_degree = v_degree if v_degree > max_degree else max_degree
+            if v_degree > max_degree:
+                max_degree = v_degree
 
         return max_degree
+
+
+    def shortest_distance_between_vertices(self, src, dest):
+        # Trivial case
+        if src == dest:
+            return 0
+
+        visited = [False] * len(self.vertices)
+        dist = [math.inf] * len(self.vertices)
+        parent = [None] * len(self.vertices)
+        q = []
+
+        visited[src] = True
+        dist[src] = 0
+        q.append(src)
+
+        while len(q) > 0:
+            # Pops first element (FIFO)
+            u = q.pop(0)
+            for v in self.adj[u]:
+                if not visited[v]:
+                    dist[v] = dist[u] + 1
+                    parent[v] = u
+                    q.append(v)
+
+                    if v == dest:
+                        return dist[v]
+
+        return None

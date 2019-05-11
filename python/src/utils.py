@@ -20,7 +20,7 @@ def create_graph_from_file(input_file):
                 a, b = [int(i) - 1 for i in line.split()]
                 g.add_edge(a, b)
         except Exception as e:
-            print('Exception occurred while parsing possible teleports\n({})'.format(e), file=sys.stderr)
+            print('Exception occurred while parsing possible teleports\n{}'.format(e), file=sys.stderr)
 
         try:
             for _ in range(num_combat_posts):
@@ -29,7 +29,7 @@ def create_graph_from_file(input_file):
                 c, d = [int(i) - 1 for i in line.split()]
                 g.update_vertex_weight(c, d)
         except Exception as e:
-            print('Exception occurred while parsing combat posts\n({})'.format(e), file=sys.stderr)
+            print('Exception occurred while parsing combat posts\n{}'.format(e), file=sys.stderr)
 
     return g
 
