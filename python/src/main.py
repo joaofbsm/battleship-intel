@@ -32,9 +32,9 @@ def main(args):
     ships = utils.sort_ships_by_size(ships)
 
     for s in ships:
-        print(f'Calculando tempo de {s.ship_type}')
         min_fleet_advantage = s.compute_advantage_time_lower_bound(fleet, min_fleet_advantage)
     print(min_fleet_advantage)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Analyse enemy fleet and create intel report.')

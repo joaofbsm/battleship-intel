@@ -79,7 +79,6 @@ class Graph:
 
         visited = [False] * len(self.vertices)
         dist = [math.inf] * len(self.vertices)
-        parent = [None] * len(self.vertices)
         q = deque()
 
         visited[src] = True
@@ -91,8 +90,8 @@ class Graph:
             u = q.popleft()
             for v in self.adj[u]:
                 if not visited[v]:
+                    visited[v] = True
                     dist[v] = dist[u] + 1
-                    parent[v] = u
                     q.append(v)
 
                     if v == dest:
