@@ -40,11 +40,20 @@ class Graph:
 
         connected_components = []
 
-        for v in range(len(self.adj)):
-            if not visited[v]:
+        for src in range(len(self.adj)):
+            if not visited[src]:
                 component_vertices = []
+                # Stack used for DFS
+                s = deque([src])
+                visited[src] = True
 
-                self.connected_components_util(v, visited, component_vertices)
+                while s:
+                    u = s.pop()
+                    component_vertices.append(u)
+                    for v in self.adj[u]:
+                        if not visited[v]:
+                            visited[v] = True
+                            s.append(v)
 
                 connected_components.append(component_vertices)
 
