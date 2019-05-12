@@ -1,22 +1,36 @@
+"""Abstraction that encapsulates methods to generate intel about ships in the enemy fleet"""
 
 from graph import Graph
 
 
 class Ship():
     def __init__(self, vertices_ids):
+        """
+        Abstraction that encapsulates methods to generate intel about ships in the enemy fleet.
+        """
         self.vertices_ids = vertices_ids
+        # The type will be represented by an integer in the interval [0, 3]
         self.ship_type = None
 
 
     def identify_ship(self, g: Graph):
+        """
+        Identify ship type, attributing the findings to self.ship_type,
+        """
+        # As the ship subgraph is undirected and unweighted, if it contains more than |V| - 1 edges, a cycle exists
+        # This method is effective because we can detect a cycle in O(|E|) using a operation we already needed
         num_edges = g.count_component_edges(self.vertices_ids)
-        # If so, the graph contains no cycles
+
+        # Component contains no cycles
         if len(self.vertices_ids) - 1 == num_edges:
+            # As the minimum number of posts is 5, if a component's vertices have degree at most 2 it's a Reconhecimento
             if g.get_component_max_vertex_degree(self.vertices_ids) == 2:
                 self.ship_type = 0  # Reconhecimento
             else:
                 self.ship_type = 1  # Frigata
+        # Component contains cycles
         else:
+            # Transportador's number of edges is always equals the number of vertices
             if len(self.vertices_ids) != num_edges:
                 self.ship_type = 2  # Bombardeiro
             else:
@@ -24,9 +38,17 @@ class Ship():
 
 
     def compute_advantage_time_lower_bound(self, g: Graph, min_fleet_advantage):
+        """
+        Compute the lower bound of the advantage time, considering that the minimum advantage time already obtained
+        is min_fleet_advantage. If during any calculation the value surpasses min_fleet_advantage, the calculation is
+        immediately stopped, as we are only look for the lower bound.
+        """
+
         # To prevent overhead in the comparison, compute the "real" advantage time only once
+        # This process is derived from Yamanaka et. al. - Swapping Labeled Tokens on Graphs
         adjusted_min_fleet_advantage = min_fleet_advantage * 2
 
+        # One specific heuristic per type of ship to reduce calculation time
         heuristic_per_ship = {
            0: self.compute_reconhecimento_advantage,
            1: self.compute_frigata_advantage,
@@ -39,27 +61,20 @@ class Ship():
         return advantage_time
 
 
-    def compute_general_advantage(self, g: Graph, adjusted_min_fleet_advantage):
-        """Computation of ship advantage time not specific to any type of ship"""
-        advantage_time = 0
-
-        for v in self.vertices_ids:
-            dist = g.shortest_distance_between_vertices(v, g.vertices[v].weight)
-            advantage_time += dist
-
-            if advantage_time >= adjusted_min_fleet_advantage:
-                return int(adjusted_min_fleet_advantage / 2)
-
-        return int(advantage_time / 2)
-
-
     def compute_reconhecimento_advantage(self, g: Graph, adjusted_min_fleet_advantage):
+        """
+        Heuristic to accelerate the computation of a Reconhecimento ship advantage time. It relies on the fact that the
+        distance between two vertices on a graph that can be modeled as a straight line can be computed by subtracting
+        their opening times in a DFS.
+        """
+
         advantage_time = 0
 
         for v in self.vertices_ids:
             dest = g.vertices[v].weight
             advantage_time += abs(g.vertices[v].opening_time - g.vertices[dest].opening_time)
 
+            # Check to prevent overcalculating the advantage time
             if advantage_time >= adjusted_min_fleet_advantage:
                 return int(adjusted_min_fleet_advantage / 2)
 
@@ -67,17 +82,26 @@ class Ship():
 
 
     def compute_frigata_advantage(self, g: Graph, adjusted_min_fleet_advantage):
+        """
+        Heuristic to accelerate the computation of a Frigata ship advantage time. It relies on the fact that the Frigata
+        is always a tree and executes the Lowest Common Ancestor (LCA) with Binary Lifting algorithm to enhance the
+        computing performance.
+        """
         advantage_time = 0
 
         root = self.vertices_ids[0]
-        g.dfs_for_lca(root)
+        # Compute the depth and the binary lifting ancestor list for each vertex in the component
+        g.compute_depths_and_ancestors(root)
 
         for v in self.vertices_ids:
             dest = g.vertices[v].weight
             lca = g.lca_with_binary_lifting(root, v, dest)
 
+            # Compute by distance between vertices by summing their distances to a common ancestor and removing this
+            # ancestors distance from the root twice to "connect" the two paths.
             advantage_time += g.vertices[v].depth + g.vertices[dest].depth - 2 * g.vertices[lca].depth
 
+            # Check to prevent overcalculating the advantage time
             if advantage_time >= adjusted_min_fleet_advantage:
                 return int(adjusted_min_fleet_advantage / 2)
 
@@ -85,6 +109,11 @@ class Ship():
 
 
     def compute_bombardeiro_advantage(self, g: Graph, adjusted_min_fleet_advantage):
+        """
+        Heuristic to accelerate the computation of a Bombardeiro ship advantage time. It relies on the fact that, even
+        though every type of ship is a bipartite graph, the only complete bipartite is the Bombardeiro, and for each
+        vertex, depending on the bipartite set they are located, the distance to any other one will be at most 2.
+        """
         advantage_time = 0
 
         for v in self.vertices_ids:
@@ -94,10 +123,11 @@ class Ship():
                 # As the ship is a complete bipartite, the distance between vertices in the same set is 2
                 if g.vertices[v].bipartite_set == g.vertices[dest].bipartite_set:
                     advantage_time += 2
-                # For vertex in different sets, the distance is 1
+                # For vertices in different sets, the distance is 1
                 else:
                     advantage_time += 1
 
+            # Check to prevent overcalculating the advantage time
             if advantage_time >= adjusted_min_fleet_advantage:
                 return int(adjusted_min_fleet_advantage / 2)
 
@@ -105,6 +135,11 @@ class Ship():
 
 
     def compute_transportador_advantage(self, g: Graph, adjusted_min_fleet_advantage):
+        """
+        Heuristic to accelerate the computation of a Transportador ship advantage time. Similar to the Reconhecimento's
+        heuristic, but this time we can go both left or right to find the destination node, as the graph is cyclic. We
+        then calculate both distances and choose the smallest one.
+        """
         advantage_time = 0
 
         for v in self.vertices_ids:
@@ -116,6 +151,7 @@ class Ship():
 
             advantage_time += min(dist1, dist2)
 
+            # Check to prevent overcalculating the advantage time
             if advantage_time >= adjusted_min_fleet_advantage:
                 return int(adjusted_min_fleet_advantage / 2)
 
