@@ -81,23 +81,6 @@ class Graph:
         return max_degree
 
 
-    def calculate_vertices_depth(self, root):
-        visited = [False] * len(self.vertices)
-
-        visited[root] = True
-        self.vertices[root].depth = 0
-        q = deque([root])
-
-        while q:
-            # Pops first element (FIFO)
-            u = q.popleft()
-            for v in self.adj[u]:
-                if not visited[v]:
-                    visited[v] = True
-                    self.vertices[v].depth = self.vertices[u] + 1
-                    q.append(v)
-
-
     def shortest_distance_between_vertices(self, src, dest):
         # Trivial case
         if src == dest:
@@ -144,3 +127,57 @@ class Graph:
                     q.append(v)
 
         return bipartite_sets
+
+
+    def calculate_vertices_depth(self, root):
+        visited = [False] * len(self.vertices)
+
+        visited[root] = True
+        self.vertices[root].depth = 0
+        q = deque([root])
+
+        while q:
+            # Pops first element (FIFO)
+            u = q.popleft()
+            for v in self.adj[u]:
+                if not visited[v]:
+                    visited[v] = True
+                    self.vertices[v].depth = self.vertices[u].depth + 1
+                    self.vertices[v].parent = u
+                    q.append(v)
+
+
+    def compute_path_to_root(self, v):
+        path = []
+
+        current_vertex = v
+
+        while self.vertices[current_vertex].depth != 0:
+            current_vertex = self.vertices[current_vertex].parent
+            path.append(current_vertex)
+
+        return path
+
+
+    def lca(self, root, u, v):
+        # Trivial case
+        if u == v:
+            return u
+
+        # Cases where the vertex are the root, and, therefore, the LCA
+        if root == u or root == v:
+            return root
+
+        path_u = self.compute_path_to_root(u)
+        path_v = self.compute_path_to_root(v)
+
+        i = -1
+        # Walk on paths in the reverse order, i.e., from root to vertex
+        while(path_u[i] == path_v[i]):
+            ancestor = path_u[i]
+            i -= 1
+            if ancestor == root:
+                break
+
+        # This is the least common ancestor
+        return ancestor
