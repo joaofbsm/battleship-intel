@@ -197,7 +197,7 @@ class Graph:
                 visited[u] = True
                 s.append(u)
                 self.vertices[u].opening_time = time
-                
+
                 for v in self.adj[u]:
                     if not visited[v]:
                         s.append(v)
