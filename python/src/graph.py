@@ -43,17 +43,17 @@ class Graph:
         for src in range(len(self.adj)):
             if not visited[src]:
                 component_vertices = []
-                # Stack used for DFS
-                s = deque([src])
                 visited[src] = True
+                # Queue used for BFS
+                q = deque([src])
 
-                while s:
-                    u = s.pop()
+                while q:
+                    u = q.popleft()
                     component_vertices.append(u)
                     for v in self.adj[u]:
                         if not visited[v]:
                             visited[v] = True
-                            s.append(v)
+                            q.append(v)
 
                 connected_components.append(component_vertices)
 
@@ -81,6 +81,23 @@ class Graph:
         return max_degree
 
 
+    def calculate_vertices_depth(self, root):
+        visited = [False] * len(self.vertices)
+
+        visited[root] = True
+        self.vertices[root].depth = 0
+        q = deque([root])
+
+        while q:
+            # Pops first element (FIFO)
+            u = q.popleft()
+            for v in self.adj[u]:
+                if not visited[v]:
+                    visited[v] = True
+                    self.vertices[v].depth = self.vertices[u] + 1
+                    q.append(v)
+
+
     def shortest_distance_between_vertices(self, src, dest):
         # Trivial case
         if src == dest:
@@ -88,11 +105,10 @@ class Graph:
 
         visited = [False] * len(self.vertices)
         dist = [math.inf] * len(self.vertices)
-        q = deque()
 
         visited[src] = True
         dist[src] = 0
-        q.append(src)
+        q = deque([src])
 
         while q:
             # Pops first element (FIFO)
