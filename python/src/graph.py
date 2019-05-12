@@ -109,8 +109,9 @@ class Graph:
     def compute_depths_and_ancestors(self, root):
         """
         Computes the depths of each vertex in a connected component in relation to the root vertex received, and also a
-        list of the log |V| + 1 "binary" ancestors of the vertices.. This is a modified iterative DFS procedure that
-        don't need to mark vertices as visited, thus saving some time.
+        list of the log |V| + 1 "binary" ancestors of the vertices. This is a modified iterative DFS procedure that
+        don't need to mark vertices as visited, thus saving some time. As this procedure is expensive, and doesn't need
+        to be done for every component, we are not incorporating it in find components loop.
         """
         # As there are no cycles in a tree, there is no need to check if a vertex was already visited
         s = deque([root])

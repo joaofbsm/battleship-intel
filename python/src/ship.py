@@ -50,8 +50,8 @@ class Ship():
 
         # One specific heuristic per type of ship to reduce calculation time
         heuristic_per_ship = {
-           0: self.compute_reconhecimento_advantage,
-           1: self.compute_frigata_advantage,
+           0: self.compute_tree_advantage,
+           1: self.compute_tree_advantage,
            2: self.compute_bombardeiro_advantage,
            3: self.compute_transportador_advantage
         }
@@ -61,31 +61,12 @@ class Ship():
         return advantage_time
 
 
-    def compute_reconhecimento_advantage(self, g: Graph, adjusted_min_fleet_advantage):
+    def compute_tree_advantage(self, g: Graph, adjusted_min_fleet_advantage):
         """
-        Heuristic to accelerate the computation of a Reconhecimento ship advantage time. It relies on the fact that the
-        distance between two vertices on a graph that can be modeled as a straight line can be computed by subtracting
-        their opening times in a DFS.
-        """
-
-        advantage_time = 0
-
-        for v in self.vertices_ids:
-            dest = g.vertices[v].weight
-            advantage_time += abs(g.vertices[v].opening_time - g.vertices[dest].opening_time)
-
-            # Check to prevent overcalculating the advantage time
-            if advantage_time >= adjusted_min_fleet_advantage:
-                return int(adjusted_min_fleet_advantage / 2)
-
-        return int(advantage_time / 2)
-
-
-    def compute_frigata_advantage(self, g: Graph, adjusted_min_fleet_advantage):
-        """
-        Heuristic to accelerate the computation of a Frigata ship advantage time. It relies on the fact that the Frigata
-        is always a tree and executes the Lowest Common Ancestor (LCA) with Binary Lifting algorithm to enhance the
-        computing performance.
+        Heuristic to accelerate the computation of ships that have a tree like structure, which are the Reconhecimento
+        and Frigata. It relies on the fact that for trees, the Lowest Common Ancestor (LCA) with Binary Lifting
+        algorithm can be computed in O(lg n), where n is the number of vertices in it. We need to compute the depths and
+        ancestors first using a DFS though, but the time is still linear in the number of vertices for a sparse graph.
         """
         advantage_time = 0
 
