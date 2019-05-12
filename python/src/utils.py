@@ -36,3 +36,13 @@ def create_graph_from_file(input_file):
 
 def sort_ships_by_size(ships, reverse=False):
     return sorted(ships, key=lambda s: len(s.vertices_ids), reverse=reverse)
+
+
+def group_and_sort_ships(ships, reverse=False):
+    reco = sort_ships_by_size([s for s in ships if s.ship_type == 0], reverse=reverse)
+    frig = sort_ships_by_size([s for s in ships if s.ship_type == 1], reverse=reverse)
+    bomb = sort_ships_by_size([s for s in ships if s.ship_type == 2], reverse=reverse)
+    tran = sort_ships_by_size([s for s in ships if s.ship_type == 3], reverse=reverse)
+
+    return reco, frig, bomb, tran
+
