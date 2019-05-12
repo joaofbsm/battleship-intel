@@ -9,7 +9,7 @@ def create_graph_from_stdin():
     """
     Read the file-like object sys.stdin and generate a graph with the information it contains.
     """
-    # Read radar information header
+    # Read intel information header
     num_combat_posts, num_possible_teleports = [int(i) for i in sys.stdin.readline().split()]
 
     # Graph that represents the enemy fleet

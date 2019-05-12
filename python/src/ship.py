@@ -117,9 +117,10 @@ class Ship():
 
     def compute_transportador_advantage(self, g: Graph, adjusted_min_fleet_advantage):
         """
-        Heuristic to accelerate the computation of a Transportador ship advantage time. Similar to the Reconhecimento's
-        heuristic, but this time we can go both left or right to find the destination node, as the graph is cyclic. We
-        then calculate both distances and choose the smallest one.
+        Heuristic to accelerate the computation of a Transportador ship advantage time. From each vertex we can go both
+        left or right to find the destination node, as the graph is cyclic. We then calculate both distances by first
+        subtracting the opening times for the vertex found in DFS, and afterwards calculating the distance by going
+        traversing the other path, which can be smaller.
         """
         advantage_time = 0
 

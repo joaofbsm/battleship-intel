@@ -1,4 +1,4 @@
-"""Analyse radar data and create intel report about enemy fleet"""
+"""Analyse data and create intel report about enemy fleet"""
 
 import math
 
@@ -7,7 +7,7 @@ from ship import Ship
 
 
 def main():
-    # Create the fleet graph using radar information contained in the input file
+    # Create the fleet graph using intel information contained in the input file
     fleet = utils.create_graph_from_stdin()
 
     # Detect the ships (connected components) in the fleet (graph)
