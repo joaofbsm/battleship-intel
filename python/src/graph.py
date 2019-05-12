@@ -197,9 +197,9 @@ class Graph:
                 visited[u] = True
                 s.append(u)
                 self.vertices[u].opening_time = time
+                
+                for v in self.adj[u]:
+                    if not visited[v]:
+                        s.append(v)
             else:
                 self.vertices[u].closing_time = time
-            # Recur for all the vertices adjacent to this vertex
-            for v in self.adj[u]:
-                if not visited[v]:
-                    s.append(v)
