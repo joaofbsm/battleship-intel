@@ -28,10 +28,10 @@ class Ship():
         adjusted_min_fleet_advantage = min_fleet_advantage * 2
 
         heuristic_per_ship = {
-           0: self.compute_general_advantage,
+           0: self.compute_reconhecimento_advantage,
            1: self.compute_frigata_advantage,
            2: self.compute_bombardeiro_advantage,
-           3: self.compute_general_advantage
+           3: self.compute_transportador_advantage
         }
 
         advantage_time = heuristic_per_ship[self.ship_type](g, adjusted_min_fleet_advantage)
@@ -56,7 +56,13 @@ class Ship():
     def compute_reconhecimento_advantage(self, g: Graph, adjusted_min_fleet_advantage):
         advantage_time = 0
 
+        # Run DFS to compute opening and closing times
+        g.iterative_dfs(self.vertices_ids[0])
+
         for v in self.vertices_ids:
+            dest = g.vertices[v].weight
+            advantage_time += abs(g.vertices[v].opening_time - g.vertices[dest].opening_time)
+
             if advantage_time >= adjusted_min_fleet_advantage:
                 return int(adjusted_min_fleet_advantage / 2)
 
@@ -105,7 +111,18 @@ class Ship():
     def compute_transportador_advantage(self, g: Graph, adjusted_min_fleet_advantage):
         advantage_time = 0
 
+        # Run DFS to compute opening and closing times
+        g.iterative_dfs(self.vertices_ids[0])
+
         for v in self.vertices_ids:
+            dest = g.vertices[v].weight
+
+            # Similar to Reconhecimento's heuristic but now we have two possible paths
+            dist1 = abs(g.vertices[v].opening_time - g.vertices[dest].opening_time)
+            dist2 = len(self.vertices_ids) - dist1
+
+            advantage_time += min(dist1, dist2)
+
             if advantage_time >= adjusted_min_fleet_advantage:
                 return int(adjusted_min_fleet_advantage / 2)
 

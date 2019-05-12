@@ -182,3 +182,24 @@ class Graph:
 
         # This is the least common ancestor
         return ancestor
+
+
+    def iterative_dfs(self, src):
+        visited = [False] * len(self.vertices)
+        time = 0
+
+        s = deque([src])
+
+        while s:
+            time += 1
+            u = s.pop()
+            if not visited[u]:
+                visited[u] = True
+                s.append(u)
+                self.vertices[u].opening_time = time
+            else:
+                self.vertices[u].closing_time = time
+            # Recur for all the vertices adjacent to this vertex
+            for v in self.adj[u]:
+                if not visited[v]:
+                    s.append(v)
