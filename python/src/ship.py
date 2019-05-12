@@ -56,9 +56,6 @@ class Ship():
     def compute_reconhecimento_advantage(self, g: Graph, adjusted_min_fleet_advantage):
         advantage_time = 0
 
-        # Run DFS to compute opening and closing times
-        g.iterative_dfs(self.vertices_ids[0])
-
         for v in self.vertices_ids:
             dest = g.vertices[v].weight
             advantage_time += abs(g.vertices[v].opening_time - g.vertices[dest].opening_time)
@@ -110,9 +107,6 @@ class Ship():
 
     def compute_transportador_advantage(self, g: Graph, adjusted_min_fleet_advantage):
         advantage_time = 0
-
-        # Run DFS to compute opening and closing times
-        g.iterative_dfs(self.vertices_ids[0])
 
         for v in self.vertices_ids:
             dest = g.vertices[v].weight

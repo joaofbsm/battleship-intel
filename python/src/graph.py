@@ -37,23 +37,31 @@ class Graph:
 
     def find_connected_components(self):
         visited = [False] * len(self.adj)
-
         connected_components = []
+        time = 0
 
         for src in range(len(self.adj)):
             if not visited[src]:
                 component_vertices = []
-                visited[src] = True
-                # Queue used for BFS
-                q = deque([src])
+                # Stack used for DFS
+                s = deque([src])
 
-                while q:
-                    u = q.popleft()
-                    component_vertices.append(u)
-                    for v in self.adj[u]:
-                        if not visited[v]:
-                            visited[v] = True
-                            q.append(v)
+                while s:
+                    time += 1
+                    u = s.pop()
+                    if not visited[u]:
+                        visited[u] = True
+                        component_vertices.append(u)
+                        # Append u again so we can calculate its closing time after all the child nodes are executed
+                        s.append(u)
+                        self.vertices[u].opening_time = time
+
+                        for v in self.adj[u]:
+                            if not visited[v]:
+                                s.append(v)
+
+                    else:
+                        self.vertices[u].closing_time = time
 
                 connected_components.append(component_vertices)
 
@@ -187,24 +195,3 @@ class Graph:
 
         # This is the least common ancestor
         return ancestor
-
-
-    def iterative_dfs(self, src):
-        visited = [False] * len(self.vertices)
-        time = 0
-
-        s = deque([src])
-
-        while s:
-            time += 1
-            u = s.pop()
-            if not visited[u]:
-                visited[u] = True
-                s.append(u)
-                self.vertices[u].opening_time = time
-
-                for v in self.adj[u]:
-                    if not visited[v]:
-                        s.append(v)
-            else:
-                self.vertices[u].closing_time = time
