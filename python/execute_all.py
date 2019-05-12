@@ -6,7 +6,7 @@ def compare_outputs(out_file):
     
     with open('pa.out', 'r') as f:
         lines = f.read().splitlines()
-    
+
     with open(out_file, 'r') as f:
         lines_ground_truth = f.read().splitlines()
     

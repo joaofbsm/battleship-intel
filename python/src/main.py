@@ -28,7 +28,6 @@ def main():
     # Sort ships in crescent order of quantity of vertices for faster computing
     ships = utils.sort_ships_by_size(ships)
 
-    #for s in [i for i in ships if i.ship_type in [0, 1, 2, 3]]:
     for s in ships:
         min_fleet_advantage = s.compute_advantage_time_lower_bound(fleet, min_fleet_advantage)
 
