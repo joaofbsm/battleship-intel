@@ -70,11 +70,11 @@ class Ship():
         advantage_time = 0
 
         root = self.vertices_ids[0]
-        g.calculate_vertices_depth(root)
+        g.dfs_for_lca(root)
 
         for v in self.vertices_ids:
             dest = g.vertices[v].weight
-            lca = g.lca(root, v, dest)
+            lca = g.lca_with_binary_lifting(root, v, dest)
 
             advantage_time += g.vertices[v].depth + g.vertices[dest].depth - 2 * g.vertices[lca].depth
 

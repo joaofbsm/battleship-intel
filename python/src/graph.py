@@ -26,15 +26,6 @@ class Graph:
         self.vertices[u].weight = w
 
 
-    def connected_components_util(self, u, visited, component_vertices):
-        visited[u] = True
-        component_vertices.append(u)
-
-        for v in self.adj[u]:
-            if not visited[v]:
-                self.connected_components_util(v, visited, component_vertices)
-
-
     def find_connected_components(self):
         visited = [False] * len(self.adj)
         connected_components = []
@@ -158,13 +149,8 @@ class Graph:
         if root == u or root == v:
             return root
 
-        if not self.vertices[u].path:
-            self.vertices[u].path = self.compute_path_to_root(u)
-        if not self.vertices[v].path:
-            self.vertices[v].path = self.compute_path_to_root(v)
-
-        path_u = self.vertices[u].path
-        path_v = self.vertices[v].path
+        path_u = self.compute_path_to_root(u)
+        path_v = self.compute_path_to_root(v)
 
         i = -1
         # Walk on paths in the reverse order, i.e., from root to vertex
@@ -175,5 +161,59 @@ class Graph:
             if ancestor == u or ancestor == v:
                 break
 
-        # This is the least common ancestor
+        # This is the lowest common ancestor
         return ancestor
+
+
+    def dfs_for_lca(self, src):
+        # As there are no cycles in a tree, there is no need to check if a vertex was already visited
+        s = deque([src])
+        self.vertices[src].depth = 0
+        self.vertices[src].parent = src
+
+        log_num_vertices = int(math.ceil(math.log(len(self.vertices), 2)))
+
+        while s:
+            u = s.pop()
+            self.vertices[u].ancestors = [-1] * (log_num_vertices + 1)
+            self.vertices[u].ancestors[0] = self.vertices[u].parent
+
+            for i in range(1, log_num_vertices + 1):
+                calculated_vertex = self.vertices[u].ancestors[i - 1]
+                self.vertices[u].ancestors[i] = self.vertices[calculated_vertex].ancestors[i - 1]
+
+            for v in self.adj[u]:
+                if v != self.vertices[u].parent:
+                    s.append(v)
+                    self.vertices[v].depth = self.vertices[u].depth + 1
+                    self.vertices[v].parent = u
+
+
+    def lca_with_binary_lifting(self, root, u, v):
+        # Trivial cases
+        if u == v:
+            return u
+        elif u == root or v == root:
+            return root
+
+        log_num_vertices = int(math.ceil(math.log(len(self.vertices), 2)))
+
+        # Swap vertices to execute the ancestor search on the one who is deepest on the tree
+        if self.vertices[u].depth < self.vertices[v].depth:
+            aux = u
+            u = v
+            v = aux
+
+        for i in range(log_num_vertices, -1, -1):
+            if (self.vertices[u].depth - (2 ** i)) >= self.vertices[v].depth:
+                u = self.vertices[u].ancestors[i]
+
+            if u == v:
+                return u
+
+        for i in range(log_num_vertices, -1, -1):
+            if self.vertices[u].ancestors[i] != self.vertices[v].ancestors[i]:
+                u = self.vertices[u].ancestors[i]
+                v = self.vertices[v].ancestors[i]
+
+        return self.vertices[u].ancestors[0]
