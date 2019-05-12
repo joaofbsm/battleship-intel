@@ -148,7 +148,7 @@ class Graph:
 
 
     def compute_path_to_root(self, v):
-        path = []
+        path = [v]
 
         current_vertex = v
 
@@ -176,7 +176,8 @@ class Graph:
         while(path_u[i] == path_v[i]):
             ancestor = path_u[i]
             i -= 1
-            if ancestor == root:
+            # Reached end of a path
+            if ancestor == u or ancestor == v:
                 break
 
         # This is the least common ancestor
