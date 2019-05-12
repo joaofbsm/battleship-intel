@@ -4,6 +4,6 @@ tests=("../tests/in/1.in" "../tests/in/2.in" "../tests/in/3.in" "../tests/in/4.i
 for test in "${tests[@]}"
 do
     echo "$test"
-    time python src/main.py -i $test -o ../results/pdf1.out
+    time python src/main.py < $test > ../results/pdf1.out
     echo ""
 done
