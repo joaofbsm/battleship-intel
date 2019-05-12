@@ -168,8 +168,13 @@ class Graph:
         if root == u or root == v:
             return root
 
-        path_u = self.compute_path_to_root(u)
-        path_v = self.compute_path_to_root(v)
+        if not self.vertices[u].path:
+            self.vertices[u].path = self.compute_path_to_root(u)
+        if not self.vertices[v].path:
+            self.vertices[v].path = self.compute_path_to_root(v)
+
+        path_u = self.vertices[u].path
+        path_v = self.vertices[v].path
 
         i = -1
         # Walk on paths in the reverse order, i.e., from root to vertex

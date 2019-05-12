@@ -22,7 +22,7 @@ def create_graph_from_stdin():
         line = sys.stdin.readline()
         # Adjust all vertex indices for 0-indexing
         c, d = [int(i) - 1 for i in line.split()]
-        #g.update_vertex_weight(c, d)
+        g.update_vertex_weight(c, d)
 
     return g
 

@@ -7,5 +7,6 @@ class Vertex:
         self.depth = depth
         # This is the parent of the vertex in the shortest path from it to the root
         self.parent = parent
+        self.path = []
         self.opening_time = None
         self.closing_time = None

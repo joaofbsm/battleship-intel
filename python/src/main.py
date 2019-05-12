@@ -11,28 +11,28 @@ def main():
     # Create the fleet graph using radar information contained in the input file
     fleet = utils.create_graph_from_stdin()
 
-    print('0\n0')
+    #print('0\n0')
 
     # Detect the ships (connected components) in the fleet (graph)
-    # ships = [Ship(component) for component in fleet.find_connected_components()]
-    #
-    # # Identify ships and count their quantity by type
-    # ship_types = [0] * 4
-    # for s in ships:
-    #     s.identify_ship(fleet)
-    #     ship_types[s.ship_type] += 1
-    # print(*ship_types, sep=' ')
-    #
-    # min_fleet_advantage = math.inf
-    #
-    # # Sort ships in crescent order of quantity of vertices for faster computing
-    # ships = utils.sort_ships_by_size(ships)
-    #
-    # #for s in [i for i in ships if i.ship_type in [0, 1, 2, 3]]:
-    # for s in ships:
-    #     min_fleet_advantage = s.compute_advantage_time_lower_bound(fleet, min_fleet_advantage)
-    #
-    # print(min_fleet_advantage)
+    ships = [Ship(component) for component in fleet.find_connected_components()]
+
+    # Identify ships and count their quantity by type
+    ship_types = [0] * 4
+    for s in ships:
+        s.identify_ship(fleet)
+        ship_types[s.ship_type] += 1
+    print(*ship_types, sep=' ')
+
+    min_fleet_advantage = math.inf
+
+    # Sort ships in crescent order of quantity of vertices for faster computing
+    ships = utils.sort_ships_by_size(ships)
+
+    #for s in [i for i in ships if i.ship_type in [0, 1, 2, 3]]:
+    for s in ships:
+        min_fleet_advantage = s.compute_advantage_time_lower_bound(fleet, min_fleet_advantage)
+
+    print(min_fleet_advantage)
 
 
 if __name__ == '__main__':
