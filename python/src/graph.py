@@ -45,6 +45,7 @@ class Graph:
                 component_vertices = []
                 # Stack used for DFS
                 s = deque([src])
+                self.vertices[src].bipartite_set = 0
 
                 while s:
                     time += 1
@@ -58,6 +59,7 @@ class Graph:
 
                         for v in self.adj[u]:
                             if not visited[v]:
+                                self.vertices[v].bipartite_set = (self.vertices[u].bipartite_set + 1) % 2
                                 s.append(v)
 
                     else:
@@ -115,26 +117,6 @@ class Graph:
 
         # If there is no shortest path between src and dest, i.e., they are not in the same component, return None
         return None
-
-
-    def get_bipartite_sets(self, src):
-        bipartite_sets = [None] * len(self.vertices)
-        q = deque()
-
-        bipartite_sets[src] = 0
-        q.append(src)
-
-        while q:
-            # Pops first element (FIFO)
-            u = q.popleft()
-            parent_set_number = bipartite_sets[u]
-            for v in self.adj[u]:
-                # Vertex is not in any set yet
-                if bipartite_sets[v] is None:
-                    bipartite_sets[v] = (parent_set_number + 1) % 2
-                    q.append(v)
-
-        return bipartite_sets
 
 
     def calculate_vertices_depth(self, root):

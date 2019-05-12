@@ -87,13 +87,12 @@ class Ship():
     def compute_bombardeiro_advantage(self, g: Graph, adjusted_min_fleet_advantage):
         advantage_time = 0
 
-        bipartite_sets = g.get_bipartite_sets(self.vertices_ids[0])
         for v in self.vertices_ids:
             dest = g.vertices[v].weight
             # If the current vertex is already the destination, the advantage time doesn't change
             if v != dest:
                 # As the ship is a complete bipartite, the distance between vertices in the same set is 2
-                if bipartite_sets[v] == bipartite_sets[dest]:
+                if g.vertices[v].bipartite_set == g.vertices[dest].bipartite_set:
                     advantage_time += 2
                 # For vertex in different sets, the distance is 1
                 else:
