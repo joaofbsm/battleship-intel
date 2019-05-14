@@ -1,12 +1,16 @@
 """Analyse data and create intel report about enemy fleet"""
 
 import math
+import resource
+import time
 
 import utils
 from ship import Ship
 
 
 def main():
+    start_time = time.time()
+
     # Create the fleet graph using intel information contained in the input file
     fleet = utils.create_graph_from_stdin()
 
@@ -29,6 +33,11 @@ def main():
     for s in ships:
         min_fleet_advantage = s.compute_advantage_time_lower_bound(fleet, min_fleet_advantage)
     print(min_fleet_advantage)
+
+    end_time = time.time() - start_time
+
+    print('Execution time (s):', end_time)
+    print('Memory consumption (MB):', resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1000000)
 
 
 if __name__ == '__main__':
